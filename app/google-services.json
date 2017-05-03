@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "684515100776",
+    "firebase_url": "https://messapp-8e16f.firebaseio.com",
+    "project_id": "messapp-8e16f",
+    "storage_bucket": "messapp-8e16f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684515100776:android:a5835b205622a966",
+        "android_client_info": {
+          "package_name": "com.messapp.iitmandi.messapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684515100776-i8jka29ek44jdaiemqm63jpjf92m7mbe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.messapp.iitmandi.messapp",
+            "certificate_hash": "fa1e19672ab47369c90e4d59f17a913f4ee78c8e"
+          }
+        },
+        {
+          "client_id": "684515100776-gb2d7gb1bjpj9qi8taranagvns32s2ls.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt75YS9auAtS73Yarq_Kxae4G0TPD3ruE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684515100776-gb2d7gb1bjpj9qi8taranagvns32s2ls.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
