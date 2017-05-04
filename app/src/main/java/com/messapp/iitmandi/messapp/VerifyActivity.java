@@ -34,7 +34,6 @@ public class VerifyActivity extends AppCompatActivity {
 
             Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
             startActivity(intent);
-            finish();
 
 
         } else {
