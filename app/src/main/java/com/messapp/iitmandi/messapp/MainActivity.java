@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Layout;
 import android.util.Log;
@@ -27,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -64,6 +67,9 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private LinearLayout feedback_linear_layout;
     private TextView tv_userId;
+    private String dayOfTheWeek;
+    private Date d;
+    private String date;
 
 
     @Override
@@ -81,7 +87,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -119,62 +124,73 @@ public class MainActivity extends AppCompatActivity
 
         ar = new ArrayList<String>();
         time = new ArrayList<String>();
-
+        date = DateFormat.getDateInstance().format(new Date());
 
         adapter = new ArrayAdapter<String>(this,
                 R.layout.spinner_item, ar);
         adapter_time = new ArrayAdapter<String>(this, R.layout.spinner_item, time);
         time.add("Breakfast");
         time.add("Lunch");
+        time.add("Snacks");
         time.add("Dinner");
         spinner_time.setAdapter(adapter_time);
         SimpleDateFormat sdf = new SimpleDateFormat("EEE");
-        Date d = new Date();
-        final String dayOfTheWeek = sdf.format(d);
+        d = new Date();
+        dayOfTheWeek = sdf.format(d);
 
         day_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myRef = database.getReference("menu").child(dayOfTheWeek).child(spinner_time.getSelectedItem().toString());
-                ar.clear();
-                feedback_linear_layout.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                editText_feedback.setText("");
-                ratingBar.setRating(0);
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            feedback_linear_layout.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            String item = postSnapshot.getKey().toString();
-
-                            ar.add(item);
-                            spinner_item.setAdapter(adapter);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                getTime();
             }
         });
-        final String date = DateFormat.getDateInstance().format(new Date());
-
-
-        Log.d("day",dayOfTheWeek);
         button_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myRef = database.getReference("feedback").child(date).child(user.getUid().toString()).child(spinner_time.getSelectedItem().toString()).child(spinner_item.getSelectedItem().toString());
-                myRef.child("Feed").setValue(editText_feedback.getText().toString());
-                myRef.child("Rating").setValue(ratingBar.getRating());
+                SubmitFeed();
             }
         });
 
 
+    }
+
+    private void SubmitFeed() {
+        myRef = database.getReference("feedback").child(date).child(user.getUid().toString()).child(spinner_time.getSelectedItem().toString()).child(spinner_item.getSelectedItem().toString());
+        myRef.child("Feed").setValue(editText_feedback.getText().toString());
+        myRef.child("Rating").setValue(ratingBar.getRating());
+        editText_feedback.setText("");
+        ratingBar.setRating(0);
+        Toast.makeText(MainActivity.this, "Your feedback has been recorded.",
+                Toast.LENGTH_LONG).show();
+    }
+
+    private void getTime() {
+        myRef = database.getReference("menu").child(dayOfTheWeek).child(spinner_time.getSelectedItem().toString());
+        ar.clear();
+        feedback_linear_layout.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        editText_feedback.setText("");
+        ratingBar.setRating(0);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    feedback_linear_layout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    String item = postSnapshot.getKey().toString();
+
+                    ar.add(item);
+                    spinner_item.setAdapter(adapter);
+                    Toast.makeText(MainActivity.this, "Enter your feedback.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -223,11 +239,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_feedback) {
-            if (active == true) {
-            }
-            else startActivity(new Intent(MainActivity.this, MainActivity.class));
+            displayView(R.id.nav_feedback);
         } else if (id == R.id.nav_on_leave) {
-
+            displayView(R.id.nav_on_leave);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -238,6 +252,40 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void displayView(int viewId) {
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
+
+        switch (viewId) {
+            case R.id.nav_on_leave:
+                fragment = new OnLeave();
+                title = "Going on Leave!";
+                break;
+            case R.id.nav_feedback:
+                fragment = null;
+                title = "Feedback";
+                break;
+
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        } else {
+            startActivity(new Intent(MainActivity.this, MainActivity.class));
+            finish();
+        }
+
+        // set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
