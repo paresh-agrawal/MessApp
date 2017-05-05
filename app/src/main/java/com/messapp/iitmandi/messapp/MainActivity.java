@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,9 +22,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,7 +36,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,13 +52,19 @@ public class MainActivity extends AppCompatActivity
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private Spinner spinner_day,spinner_item;
+    private Spinner spinner_item,spinner_time;
     private String day;
     private Button day_selected,button_submit;
     private RatingBar ratingBar;
     private EditText editText_feedback;
-    private ArrayList<String> ar;
-    private ArrayAdapter<String> adapter;
+    private ArrayList<String> ar,time;
+    private ArrayAdapter<String> adapter,adapter_time;
+    static boolean active = false;
+    private DrawerLayout drawer;
+    private ProgressBar progressBar;
+    private LinearLayout feedback_linear_layout;
+    private TextView tv_userId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +82,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        auth = FirebaseAuth.getInstance();
 
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
         //get current user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -87,31 +103,52 @@ public class MainActivity extends AppCompatActivity
 
         database = FirebaseDatabase.getInstance();
 
-
-        spinner_day = (Spinner)findViewById(R.id.spinner_day);
+        //spinner_day = (Spinner)findViewById(R.id.spinner_day);
         spinner_item = (Spinner)findViewById(R.id.spinner_item);
-        day_selected = (Button)findViewById(R.id.day_selected);
+        spinner_time = (Spinner)findViewById(R.id.spinner_time);
+        day_selected = (Button) findViewById(R.id.day_selected);
         ratingBar = (RatingBar)findViewById(R.id.ratingBar);
         editText_feedback = (EditText)findViewById(R.id.editText_feedback);
         button_submit = (Button)findViewById(R.id.button_submit);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        feedback_linear_layout = (LinearLayout)findViewById(R.id.feedback_linear_layout);
+        tv_userId = (TextView)findViewById(R.id.textView_userId);
+
+        //tv_userId.setText("hey");
+        Log.d("emailId", user.getEmail().toString());
 
         ar = new ArrayList<String>();
+        time = new ArrayList<String>();
+
+
         adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, ar);
+                R.layout.spinner_item, ar);
+        adapter_time = new ArrayAdapter<String>(this, R.layout.spinner_item, time);
+        time.add("Breakfast");
+        time.add("Lunch");
+        time.add("Dinner");
+        spinner_time.setAdapter(adapter_time);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE");
+        Date d = new Date();
+        final String dayOfTheWeek = sdf.format(d);
+
         day_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myRef = database.getReference("menu").child(spinner_day.getSelectedItem().toString());
+                myRef = database.getReference("menu").child(dayOfTheWeek).child(spinner_time.getSelectedItem().toString());
                 ar.clear();
+                feedback_linear_layout.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                editText_feedback.setText("");
+                ratingBar.setRating(0);
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            spinner_item.setVisibility(View.VISIBLE);
-                            ratingBar.setVisibility(View.VISIBLE);
-                            button_submit.setVisibility(View.VISIBLE);
-                            editText_feedback.setVisibility(View.VISIBLE);
+                            feedback_linear_layout.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
                             String item = postSnapshot.getKey().toString();
+
                             ar.add(item);
                             spinner_item.setAdapter(adapter);
                         }
@@ -124,15 +161,25 @@ public class MainActivity extends AppCompatActivity
                 });
             }
         });
+        final String date = DateFormat.getDateInstance().format(new Date());
 
 
+        Log.d("day",dayOfTheWeek);
+        button_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRef = database.getReference("feedback").child(date).child(user.getUid().toString()).child(spinner_time.getSelectedItem().toString()).child(spinner_item.getSelectedItem().toString());
+                myRef.child("Feed").setValue(editText_feedback.getText().toString());
+                myRef.child("Rating").setValue(ratingBar.getRating());
+            }
+        });
 
 
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -176,7 +223,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_feedback) {
-            startActivity(new Intent(MainActivity.this, MainActivity.class));
+            if (active == true) {
+            }
+            else startActivity(new Intent(MainActivity.this, MainActivity.class));
         } else if (id == R.id.nav_on_leave) {
 
         } else if (id == R.id.nav_share) {
@@ -188,5 +237,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
     }
 }

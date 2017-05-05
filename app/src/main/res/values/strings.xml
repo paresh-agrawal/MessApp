@@ -48,6 +48,7 @@
     <string name="action_remove_user">Remove User</string>
     <string name="action_sign_out">Log Out</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="go"><u><b>Go</b></u></string>
 
     <string name="day_prompt">Choose day</string>
     <string-array name="day_string">
@@ -58,6 +59,11 @@
         <item>Friday</item>
         <item>Saturday</item>
         <item>Sunday</item>
+    </string-array>
+    <string-array name="time_string">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
     </string-array>
 
 </resources>
