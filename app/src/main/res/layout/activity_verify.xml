@@ -23,14 +23,6 @@
             android:layout_marginBottom="30dp"
             android:src="@mipmap/ic_launcher" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="Verify your E-mail from your institute Id"
-            android:textColor="@android:color/white"
-            android:textSize="20dp" />
 
         <Button
             android:id="@+id/verify_button"
