@@ -50,6 +50,8 @@
     <string name="action_sign_out">Log Out</string>
     <string name="title_activity_settings">Settings</string>
     <string name="go"><u><b>Go</b></u></string>
+    <string name="verified_email"><![CDATA[<< Verified E-mail, Log in]]></string>
+    <string name="todays_feed"><b>Today\'s Feedback</b></string>
 
     <string name="day_prompt">Choose day</string>
     <string-array name="day_string">
@@ -70,10 +72,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="date_label_set">Press the button to set the date</string>
-    <string name="date_button_set">Set Date</string>
-    <string name="date_view_set">The Date is: </string>
-    <string name="date_selected"></string>
 
 </resources>

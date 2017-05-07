@@ -1,15 +1,10 @@
 package com.messapp.iitmandi.messapp;
 
 import android.content.Intent;
-import android.media.Rating;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,10 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
@@ -88,6 +80,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header = navigationView.getHeaderView(0);
+
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         //get current user
@@ -117,10 +111,9 @@ public class MainActivity extends AppCompatActivity
         button_submit = (Button)findViewById(R.id.button_submit);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         feedback_linear_layout = (LinearLayout)findViewById(R.id.feedback_linear_layout);
-        tv_userId = (TextView)findViewById(R.id.textView_userId);
+        tv_userId = (TextView)header.findViewById(R.id.textView_userId);
 
-        //tv_userId.setText("hey");
-        Log.d("emailId", user.getEmail().toString());
+        tv_userId.setText(user.getEmail().toString());
 
         ar = new ArrayList<String>();
         time = new ArrayList<String>();
@@ -155,13 +148,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void SubmitFeed() {
-        myRef = database.getReference("feedback").child(date).child(user.getUid().toString()).child(spinner_time.getSelectedItem().toString()).child(spinner_item.getSelectedItem().toString());
-        myRef.child("Feed").setValue(editText_feedback.getText().toString());
-        myRef.child("Rating").setValue(ratingBar.getRating());
-        editText_feedback.setText("");
-        ratingBar.setRating(0);
-        Toast.makeText(MainActivity.this, "Your feedback has been recorded.",
-                Toast.LENGTH_LONG).show();
+        if(editText_feedback.getText().toString().equals("")){
+            Toast.makeText(MainActivity.this, "Please give some feedback.",
+                    Toast.LENGTH_LONG).show();
+        }else if (ratingBar.getRating()==0){
+            Toast.makeText(MainActivity.this, "Please enter some rating.",
+                    Toast.LENGTH_LONG).show();
+        }else {
+            myRef = database.getReference("feedback").child(date).child(user.getUid().toString()).child(spinner_time.getSelectedItem().toString()).child(spinner_item.getSelectedItem().toString());
+            myRef.child("Feed").setValue(editText_feedback.getText().toString());
+            myRef.child("Rating").setValue(ratingBar.getRating());
+            editText_feedback.setText("");
+            ratingBar.setRating(0);
+            Toast.makeText(MainActivity.this, "Your feedback has been recorded.",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     private void getTime() {
@@ -242,6 +243,8 @@ public class MainActivity extends AppCompatActivity
             displayView(R.id.nav_feedback);
         } else if (id == R.id.nav_on_leave) {
             displayView(R.id.nav_on_leave);
+        } else if (id == R.id.nav_mess_menu) {
+            displayView(R.id.nav_mess_menu);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -266,7 +269,10 @@ public class MainActivity extends AppCompatActivity
                 fragment = null;
                 title = "Feedback";
                 break;
-
+            case R.id.nav_mess_menu:
+                fragment = new MessMenu();
+                title = "Mess Menu";
+                break;
         }
 
         if (fragment != null) {

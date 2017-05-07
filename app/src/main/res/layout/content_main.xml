@@ -24,10 +24,28 @@
                 tools:layout_editor_absoluteY="34dp"
                 android:prompt="@string/day_prompt"
                 android:entries="@array/day_string"/>-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/todays_feed"
+                android:textSize="20dp"
+                android:id="@+id/tv_todays_feedback"
+                android:layout_marginTop="16dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/tv_todays_feedback"
+                android:background="@color/divider"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:id="@+id/day_selected_linear_layout"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_below="@id/tv_todays_feedback"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_height="50dp"
@@ -76,16 +94,24 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="20dp"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="30dp"
                 android:layout_below="@id/day_selected_linear_layout"
                 android:id="@+id/scrollView2">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:visibility="invisible"
                     android:id="@+id/feedback_linear_layout"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Food Item"/>
 
                     <Spinner
                         android:id="@+id/spinner_item"

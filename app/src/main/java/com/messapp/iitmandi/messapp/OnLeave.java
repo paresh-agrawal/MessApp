@@ -3,16 +3,26 @@ package com.messapp.iitmandi.messapp;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
@@ -26,6 +36,14 @@ public class OnLeave extends Fragment {
     ImageButton choose_from_date,choose_to_date;
     DatePickerDialog datePickerDialog;
     FrameLayout on_leave_frame_layout;
+    EditText editText_reason;
+    Button submit;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private FirebaseAuth.AuthStateListener authListener;
+    private String[] month = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
     public OnLeave() {
         // Required empty public constructor
@@ -47,12 +65,34 @@ public class OnLeave extends Fragment {
         // Inflate the layout for this fragment
         View on_leave = inflater.inflate(R.layout.fragment_on_leave, container, false);
 
-// initiate the from_date picker and a button
+        // initiate the from_date picker and a button
         from_date = (TextView) on_leave.findViewById(R.id.from_date);
         to_date = (TextView)on_leave.findViewById(R.id.to_date);
         choose_from_date = (ImageButton)on_leave.findViewById(R.id.choose_from_date);
         choose_to_date = (ImageButton)on_leave.findViewById(R.id.choose_to_date);
         on_leave_frame_layout = (FrameLayout)on_leave.findViewById(R.id.on_leave_frame_layout);
+        editText_reason = (EditText)on_leave.findViewById(R.id.editText_reason);
+        submit = (Button)on_leave.findViewById(R.id.btn_submit);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        //get current user
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                }
+            }
+        };
+
+        database = FirebaseDatabase.getInstance();
+
         // perform click event on edit text
         on_leave_frame_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,8 +116,9 @@ public class OnLeave extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
-                                from_date.setText(dayOfMonth + "/"
-                                        + (monthOfYear + 1) + "/" + year);
+
+                                from_date.setText(month[monthOfYear] + " " + dayOfMonth + ", " +
+                                                    year);
 
                             }
                         }, mYear, mMonth, mDay);
@@ -100,14 +141,33 @@ public class OnLeave extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
-                                to_date.setText(dayOfMonth + "/"
-                                        + (monthOfYear + 1) + "/" + year);
+                                to_date.setText(month[monthOfYear] + " " + dayOfMonth + ", " +
+                                        year);
 
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
             }
         });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRef = database.getReference("onLeave").child(user.getUid().toString());
+                myRef.child("From").setValue(from_date.getText().toString());
+                myRef.child("To").setValue(to_date.getText().toString());
+                myRef.child("Reason").setValue(editText_reason.getText().toString());
+                from_date.setText("");
+                to_date.setText("");
+                editText_reason.setText("");
+                Toast.makeText(getActivity(), "Your response has been recorded.",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+
+
         return on_leave;
     }
     @Override

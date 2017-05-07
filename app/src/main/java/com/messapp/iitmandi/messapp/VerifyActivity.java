@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,30 +36,39 @@ public class VerifyActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
         verify_button = (Button)findViewById(R.id.verify_button);
         log_in = (Button)findViewById(R.id.sign_in_button);
-
+        Log.d("user Emial",user.getEmail().toString());
         if (user.isEmailVerified()) {
 
             Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
             startActivity(intent);
-
+            Log.d("verifeied","yes");
+            finish();
 
         } else {
+            Log.d("verifeied","no");
             verify_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    user.sendEmailVerification()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(VerifyActivity.this, "Verification Email sent", Toast.LENGTH_SHORT).show();
-                                        Uri uri = Uri.parse("http://www.students.iitmandi.ac.in/webmail"); // missing 'http://' will cause crashed
-                                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                        startActivity(intent);
-                                        finish();
+                    if (user.isEmailVerified()) {
+
+                        Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        Log.d("verifeied","yes");
+                        finish();
+
+                    }
+                    else {
+                        user.sendEmailVerification()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(VerifyActivity.this, "Verification Email sent", Toast.LENGTH_SHORT).show();
+
+                                        }
                                     }
-                                }
-                            });
+                                });
+                    }
 
                 }
             });
@@ -67,9 +77,15 @@ public class VerifyActivity extends AppCompatActivity {
         log_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(VerifyActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                if (user.isEmailVerified()) {
+
+                    startActivity(new Intent(VerifyActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    auth.signOut();
+                    startActivity(new Intent(VerifyActivity.this, LoginActivity.class));
+                    finish();
+                }
             }
         });
 

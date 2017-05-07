@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
                 android:background="@null"
-                android:text="<< Verified E-mail, Log in"
+                android:text="@string/verified_email"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="15dp" />
