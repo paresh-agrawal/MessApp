@@ -55,17 +55,19 @@
 
     <string name="day_prompt">Choose day</string>
     <string-array name="day_string">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
+        <item>Today</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
     </string-array>
     <string-array name="time_string">
         <item>Breakfast</item>
         <item>Lunch</item>
+        <item>Snacks</item>
         <item>Dinner</item>
     </string-array>
 
