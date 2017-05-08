@@ -37,55 +37,71 @@ public class VerifyActivity extends AppCompatActivity {
         verify_button = (Button)findViewById(R.id.verify_button);
         log_in = (Button)findViewById(R.id.sign_in_button);
         Log.d("user Emial",user.getEmail().toString());
-        if (user.isEmailVerified()) {
-
-            Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
+        if(user.getEmail().toString().equals("iitmandimessapp@gmail.com")){
+            Intent intent = new Intent(VerifyActivity.this, AdminActivity.class);
             startActivity(intent);
             Log.d("verifeied","yes");
             finish();
-
-        } else {
-            Log.d("verifeied","no");
-            verify_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (user.isEmailVerified()) {
-
-                        Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        Log.d("verifeied","yes");
-                        finish();
-
-                    }
-                    else {
-                        user.sendEmailVerification()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(VerifyActivity.this, "Verification Email sent", Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    }
-                                });
-                    }
-
-                }
-            });
-
         }
+        else{
+            if (user.isEmailVerified()) {
+
+                Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
+                startActivity(intent);
+                Log.d("verifeied","yes");
+                finish();
+
+            } else {
+                Log.d("verifeied","no");
+                verify_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (user.isEmailVerified()) {
+
+                            Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            Log.d("verifeied","yes");
+                            finish();
+
+                        }
+                        else {
+                            user.sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(VerifyActivity.this, "Verification Email sent", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        }
+                                    });
+                        }
+
+                    }
+                });
+
+            }
+        }
+
         log_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (user.isEmailVerified()) {
-
-                    startActivity(new Intent(VerifyActivity.this, MainActivity.class));
-                    finish();
-                } else {
-                    auth.signOut();
-                    startActivity(new Intent(VerifyActivity.this, LoginActivity.class));
+                if(user.getEmail().toString().equals("iitmandimessapp@gmail.com")){
+                    startActivity(new Intent(VerifyActivity.this, AdminActivity.class));
                     finish();
                 }
+                else{
+                    if (user.isEmailVerified()) {
+
+                        startActivity(new Intent(VerifyActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        auth.signOut();
+                        startActivity(new Intent(VerifyActivity.this, LoginActivity.class));
+                        finish();
+                    }
+                }
+
             }
         });
 

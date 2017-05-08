@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_feedback_black_24dp"
+            android:checked="true"
+            android:title="Feedbacks" />
+        <item
+            android:id="@+id/nav_mess_menu"
+            android:icon="@drawable/ic_mess_menu"
+            android:title="Mess Menu" />
+        <item
+            android:id="@+id/nav_on_leave"
+            android:icon="@drawable/ic_on_leave"
+            android:title="On Leave People" />
+
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>

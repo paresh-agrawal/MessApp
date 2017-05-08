@@ -84,15 +84,15 @@
             android:layout_marginTop="5dp"
             android:layout_below="@id/day_selected_linear_layout"
             android:background="@color/divider"/>
-        <TextView
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:id="@+id/mess_menu_tv"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:lineSpacingExtra="20dp"
-            android:layout_marginTop="40dp"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="40dp"
+            android:id="@+id/recycler_view">
+
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
     <ProgressBar

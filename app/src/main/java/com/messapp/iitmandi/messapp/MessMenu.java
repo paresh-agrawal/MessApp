@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,6 +41,9 @@ public class MessMenu extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private FirebaseAuth.AuthStateListener authListener;
+    private RecyclerView recyclerView;
+    ArrayList<MenuItem> userList;
+    private MessItemAdapter adapterSearch;
     private String dayOfTheWeek;
     private Date d;
     private String date;
@@ -73,7 +76,6 @@ public class MessMenu extends Fragment {
         final Spinner spinner_day = (Spinner)mess_menu.findViewById(R.id.spinner_day);
         final Spinner spinner_time = (Spinner)mess_menu.findViewById(R.id.spinner_time);
         final Button btn_go = (Button)mess_menu.findViewById(R.id.btn_go);
-        final TextView mess_menu_tv = (TextView)mess_menu.findViewById(R.id.mess_menu_tv);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -91,6 +93,14 @@ public class MessMenu extends Fragment {
                 }
             }
         };
+
+        recyclerView = (RecyclerView) mess_menu.findViewById(R.id.recycler_view);
+        userList = new ArrayList<>();
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        adapterSearch = new MessItemAdapter(getActivity(),userList);
+        recyclerView.setAdapter(adapterSearch);
 
         database = FirebaseDatabase.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE");
@@ -111,7 +121,8 @@ public class MessMenu extends Fragment {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                mess_menu_tv.setText("");
+                userList.clear();
+                adapterSearch.notifyDataSetChanged();
                 if (spinner_day.getSelectedItem().toString().equals("Today")){
                     myRef = database.getReference("menu").child(dayOfTheWeek).child(spinner_time.getSelectedItem().toString());
                     myRef.addValueEventListener(new ValueEventListener() {
@@ -120,7 +131,8 @@ public class MessMenu extends Fragment {
                             for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 String item = postSnapshot.getKey().toString();
-                                mess_menu_tv.append("•  " + item + "\n");
+                                userList.add(new MenuItem(item));
+                                adapterSearch.notifyDataSetChanged();
                             }
 
                         }
@@ -138,7 +150,8 @@ public class MessMenu extends Fragment {
                             for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 String item = postSnapshot.getKey().toString();
-                                mess_menu_tv.append("•  " + item + "\n");
+                                userList.add(new MenuItem(item));
+                                adapterSearch.notifyDataSetChanged();
                             }
 
                         }

@@ -35,7 +35,9 @@
             android:name=".VerifyActivity"
             android:label="E-mail Verification"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AdminActivity"></activity>
+        <activity android:name=".AdminActivity"
+            android:label="Admin"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
