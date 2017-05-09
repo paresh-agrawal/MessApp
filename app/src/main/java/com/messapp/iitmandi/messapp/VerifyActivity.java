@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by root on 3/5/17.
@@ -24,6 +26,8 @@ public class VerifyActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
     private Button verify_button,log_in;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,8 @@ public class VerifyActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+
+        database = FirebaseDatabase.getInstance();
         verify_button = (Button)findViewById(R.id.verify_button);
         log_in = (Button)findViewById(R.id.sign_in_button);
         Log.d("user Emial",user.getEmail().toString());
@@ -45,7 +51,8 @@ public class VerifyActivity extends AppCompatActivity {
         }
         else{
             if (user.isEmailVerified()) {
-
+                myRef = database.getReference("users").child(user.getUid().toString());
+                myRef.setValue(user.getEmail().toString());
                 Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
                 startActivity(intent);
                 Log.d("verifeied","yes");

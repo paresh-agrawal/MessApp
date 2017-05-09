@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnSignup, btnLogin, btnReset;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
 
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 } else {
+
                                     if (email.equals("iitmandimessapp@gmail.com")){
                                         Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
                                         startActivity(intent);

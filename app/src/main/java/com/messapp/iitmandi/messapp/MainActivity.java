@@ -132,6 +132,9 @@ public class MainActivity extends AppCompatActivity
         d = new Date();
         dayOfTheWeek = sdf.format(d);
 
+        myRef = database.getReference("users").child(user.getUid().toString());
+        myRef.setValue(user.getEmail().toString());
+
         day_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
