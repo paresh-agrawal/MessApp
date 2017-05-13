@@ -3,6 +3,8 @@ package com.messapp.iitmandi.messapp;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,10 +43,11 @@ public class AdminActivity extends AppCompatActivity
     private ImageButton date_select;
     private TextView date_display;
     private DatePickerDialog datePickerDialog;
+    static boolean active = false;
     private String[] month = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private Button day_selected;
     private RecyclerView recyclerView;
-    ArrayList<AdminFeed> feedList;
+    ArrayList<AdminFeedGetter> feedList;
     private AdminFeedItemAdapter adapterSearch;
     private ProgressBar progressBar;
 
@@ -52,7 +55,7 @@ public class AdminActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
-
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,7 +68,7 @@ public class AdminActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View header = navigationView.getHeaderView(0);
+
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -150,7 +153,7 @@ public class AdminActivity extends AppCompatActivity
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     progressBar.setVisibility(View.INVISIBLE);
                                     String emailText = dataSnapshot.getValue().toString();
-                                    feedList.add(new AdminFeed(emailText,meal,itemName,rating,feedText));
+                                    feedList.add(new AdminFeedGetter(emailText,meal,itemName,rating,feedText));
                                     adapterSearch.notifyDataSetChanged();
                                 }
 
@@ -182,19 +185,53 @@ public class AdminActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_feedback) {
+            displayView(R.id.nav_feedback);
         } else if (id == R.id.nav_on_leave) {
-
+            displayView(R.id.nav_on_leave);
         } else if (id == R.id.nav_mess_menu) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            displayView(R.id.nav_mess_menu);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void displayView(int viewId) {
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
+
+        switch (viewId) {
+            case R.id.nav_on_leave:
+                fragment = new AdminOnLeave();
+                title = "Going on Leave!";
+                break;
+            case R.id.nav_feedback:
+                fragment = null;
+                title = "Feedback";
+                break;
+            case R.id.nav_mess_menu:
+                fragment = new AdminMessMenu();
+                title = "Mess Menu";
+                break;
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.admin_content_frame, fragment);
+            ft.commit();
+        } else {
+
+            startActivity(new Intent(AdminActivity.this, AdminActivity.class));
+            finish();
+        }
+
+        // set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     @Override
@@ -212,10 +249,7 @@ public class AdminActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        else if (id == R.id.action_log_out) {
+        if (id == R.id.action_log_out) {
             auth.signOut();
             startActivity(new Intent(AdminActivity.this, LoginActivity.class));
             finish();
@@ -223,5 +257,17 @@ public class AdminActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
     }
 }

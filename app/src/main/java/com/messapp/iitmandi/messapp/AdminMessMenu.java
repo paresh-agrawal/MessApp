@@ -3,6 +3,7 @@ package com.messapp.iitmandi.messapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,7 +35,7 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessMenu extends Fragment {
+public class AdminMessMenu extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -42,15 +43,15 @@ public class MessMenu extends Fragment {
     private DatabaseReference myRef;
     private FirebaseAuth.AuthStateListener authListener;
     private RecyclerView recyclerView;
-    ArrayList<MenuItemGetter> userList;
-    private MessItemAdapter adapterSearch;
+    ArrayList<AdminMenuItem> userList;
+    private AdminMessItemAdapter adapterSearch;
     private String dayOfTheWeek;
     private Date d;
     private String date;
     private ArrayList<String> ar,time;
     private ArrayAdapter<String> adapter,adapter_time;
 
-    public MessMenu() {
+    public AdminMessMenu() {
         // Required empty public constructor
     }
 
@@ -69,13 +70,14 @@ public class MessMenu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View mess_menu = inflater.inflate(R.layout.fragment_menu, container, false);
+        final View admin_mess_menu = inflater.inflate(R.layout.fragment_admin_mess_menu, container, false);
 
-        LinearLayout mess_menu_ll = (LinearLayout)mess_menu.findViewById(R.id.mess_menu_ll);
-        final ProgressBar progressBar = (ProgressBar)mess_menu.findViewById(R.id.progressBar);
-        final Spinner spinner_day = (Spinner)mess_menu.findViewById(R.id.spinner_day);
-        final Spinner spinner_time = (Spinner)mess_menu.findViewById(R.id.spinner_time);
-        final Button btn_go = (Button)mess_menu.findViewById(R.id.btn_go);
+        LinearLayout mess_menu_ll = (LinearLayout)admin_mess_menu.findViewById(R.id.mess_menu_ll);
+        final ProgressBar progressBar = (ProgressBar)admin_mess_menu.findViewById(R.id.progressBar);
+        final Spinner spinner_day = (Spinner)admin_mess_menu.findViewById(R.id.spinner_day);
+        final Spinner spinner_time = (Spinner)admin_mess_menu.findViewById(R.id.spinner_time);
+        final Button btn_go = (Button)admin_mess_menu.findViewById(R.id.btn_go);
+        final Button btn_edit = (Button)admin_mess_menu.findViewById(R.id.btn_edit);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -94,12 +96,12 @@ public class MessMenu extends Fragment {
             }
         };
 
-        recyclerView = (RecyclerView) mess_menu.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) admin_mess_menu.findViewById(R.id.recycler_view);
         userList = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapterSearch = new MessItemAdapter(getActivity(),userList);
+        adapterSearch = new AdminMessItemAdapter(getActivity(),userList);
         recyclerView.setAdapter(adapterSearch);
 
         database = FirebaseDatabase.getInstance();
@@ -120,6 +122,7 @@ public class MessMenu extends Fragment {
         btn_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_edit.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
                 userList.clear();
                 adapterSearch.notifyDataSetChanged();
@@ -131,8 +134,9 @@ public class MessMenu extends Fragment {
                             for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 String item = postSnapshot.getKey().toString();
-                                userList.add(new MenuItemGetter(item));
+                                userList.add(new AdminMenuItem(item));
                                 adapterSearch.notifyDataSetChanged();
+                                btn_edit.setVisibility(View.VISIBLE);
                             }
 
                         }
@@ -150,8 +154,9 @@ public class MessMenu extends Fragment {
                             for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 String item = postSnapshot.getKey().toString();
-                                userList.add(new MenuItemGetter(item));
+                                userList.add(new AdminMenuItem(item));
                                 adapterSearch.notifyDataSetChanged();
+                                btn_edit.setVisibility(View.VISIBLE);
                             }
 
                         }
@@ -167,9 +172,27 @@ public class MessMenu extends Fragment {
             }
         });
 
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (spinner_day.getSelectedItem().toString().equals("Today")) {
+                    Uri uri = Uri.parse("http://console.firebase.google.com/project/messapp-8e16f/database/data/menu/"
+                            + dayOfTheWeek + spinner_time.getSelectedItem().toString());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+                else{
+                    Uri uri = Uri.parse("http://console.firebase.google.com/project/messapp-8e16f/database/data/menu/"
+                            + spinner_day.getSelectedItem().toString() + spinner_time.getSelectedItem().toString());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            }
+        });
 
-        return mess_menu;
+        return admin_mess_menu;
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -179,4 +202,5 @@ public class MessMenu extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
 }

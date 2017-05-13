@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,13 +14,13 @@ import java.util.ArrayList;
  * Created by root on 23/3/17.
  */
 
-public class MessItemAdapter extends RecyclerView.Adapter<MessItemAdapter.ViewHolder> {
+public class AdminMessItemAdapter extends RecyclerView.Adapter<AdminMessItemAdapter.ViewHolder> {
 
     private Activity activity;
-    private ArrayList<MenuItemGetter> messItem;
+    private ArrayList<AdminMenuItem> messItem;
 
 
-    public MessItemAdapter(Activity activity, ArrayList<MenuItemGetter> messItem){
+    public AdminMessItemAdapter(Activity activity, ArrayList<AdminMenuItem> messItem){
         this.activity =activity;
         this.messItem = messItem;
     }
@@ -27,7 +28,7 @@ public class MessItemAdapter extends RecyclerView.Adapter<MessItemAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = activity.getLayoutInflater();
-        View view = inflater.inflate(R.layout.list_item,parent,false);
+        View view = inflater.inflate(R.layout.admin_menu_list_item,parent,false);
         return  new ViewHolder(view);
     }
 
@@ -36,7 +37,7 @@ public class MessItemAdapter extends RecyclerView.Adapter<MessItemAdapter.ViewHo
         holder.mess_item.setText(messItem.get(position).getMessItem());
     }
 
-    public void setFilter(ArrayList<MenuItemGetter> details){
+    public void setFilter(ArrayList<AdminMenuItem> details){
         messItem = new ArrayList<>();
         messItem.addAll(details);
         notifyDataSetChanged();

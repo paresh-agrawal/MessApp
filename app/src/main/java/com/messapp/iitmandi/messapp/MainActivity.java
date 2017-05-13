@@ -1,5 +1,7 @@
 package com.messapp.iitmandi.messapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
@@ -147,8 +150,6 @@ public class MainActivity extends AppCompatActivity
                 SubmitFeed();
             }
         });
-
-
     }
 
     private void SubmitFeed() {
@@ -224,10 +225,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        else if (id == R.id.action_log_out) {
+        if (id == R.id.action_log_out) {
             auth.signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
@@ -250,9 +248,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_mess_menu) {
             displayView(R.id.nav_mess_menu);
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            shareIt();
+        } else if (id == R.id.nav_credits){
+            displayView(R.id.nav_credits);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -276,6 +274,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_mess_menu:
                 fragment = new MessMenu();
                 title = "Mess Menu";
+                break;
+            case R.id.nav_credits:
+                fragment = new Credits();
+                title = "Credits";
                 break;
         }
 
@@ -307,5 +309,14 @@ public class MainActivity extends AppCompatActivity
     public void onStop() {
         super.onStop();
         active = false;
+    }
+
+    private void shareIt() {
+//sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Mess App");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Download the IIT Mandi Mess App and give your valuable feedback https://play.google.com/store/apps/details?id=com.messapp.iitmandi.messapp");
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 }

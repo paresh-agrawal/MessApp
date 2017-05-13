@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private FirebaseUser user;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String email = inputEmail.getText().toString();
+                email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
@@ -91,7 +92,12 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-
+                if (!(email.contains("@students.iitmandi.ac.in") || email.contains("iitmandimessapp@gmail.com") || email.equals("admin"))){
+                    email = email + "@students.iitmandi.ac.in";
+                }
+                if (email.equals("admin")){
+                    email = "iitmandimessapp@gmail.com";
+                }
 
                 progressBar.setVisibility(View.VISIBLE);
 

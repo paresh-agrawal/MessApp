@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MessApp</string>
+    <string name="app_name">Mess App</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -32,7 +32,7 @@
     <string name="hint_roll_no">Roll number</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_verify">VERIFY E-Mail</string>
-    <string name="btn_link_to_register">Not a member? Get registered in Firebase now!</string>
+    <string name="btn_link_to_register">Not a member? Get registered now!</string>
     <string name="btn_link_to_login">Already registered. Login Me!</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="btn_forgot_password">Forgot your password?</string>
@@ -52,6 +52,7 @@
     <string name="go"><u><b>Go</b></u></string>
     <string name="verified_email"><![CDATA[<< Verified E-mail, Log in]]></string>
     <string name="todays_feed"><b>Today\'s Feedback</b></string>
+    <string name="githubId"><u>paresh-agrawal</u></string>
 
     <string name="day_prompt">Choose day</string>
     <string-array name="day_string">

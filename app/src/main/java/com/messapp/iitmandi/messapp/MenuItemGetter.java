@@ -4,11 +4,11 @@ package com.messapp.iitmandi.messapp;
  * Created by root on 23/3/17.
  */
 
-public class MenuItem {
+public class MenuItemGetter {
 
     private String mess_item;
 
-    public MenuItem(String mess_item){
+    public MenuItemGetter(String mess_item){
         this.mess_item = mess_item;
     }
 

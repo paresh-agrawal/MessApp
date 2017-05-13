@@ -16,10 +16,10 @@ import java.util.ArrayList;
 public class AdminFeedItemAdapter extends RecyclerView.Adapter<AdminFeedItemAdapter.ViewHolder> {
 
     private Activity activity;
-    private ArrayList<AdminFeed> feedItem;
+    private ArrayList<AdminFeedGetter> feedItem;
 
 
-    public AdminFeedItemAdapter(Activity activity, ArrayList<AdminFeed> feedItem){
+    public AdminFeedItemAdapter(Activity activity, ArrayList<AdminFeedGetter> feedItem){
         this.activity =activity;
         this.feedItem = feedItem;
     }
@@ -41,7 +41,7 @@ public class AdminFeedItemAdapter extends RecyclerView.Adapter<AdminFeedItemAdap
 
     }
 
-    public void setFilter(ArrayList<AdminFeed> details){
+    public void setFilter(ArrayList<AdminFeedGetter> details){
         feedItem = new ArrayList<>();
         feedItem.addAll(details);
         notifyDataSetChanged();

@@ -44,6 +44,7 @@ public class OnLeave extends Fragment {
     private DatabaseReference myRef;
     private FirebaseAuth.AuthStateListener authListener;
     private String[] month = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    private int selected_month_to, selected_month_from, selected_day_to, selected_day_from, selected_year_to, selected_year_from;
 
     public OnLeave() {
         // Required empty public constructor
@@ -119,6 +120,9 @@ public class OnLeave extends Fragment {
 
                                 from_date.setText(month[monthOfYear] + " " + dayOfMonth + ", " +
                                                     year);
+                                selected_day_from = dayOfMonth;
+                                selected_month_from = monthOfYear;
+                                selected_year_from = year;
 
                             }
                         }, mYear, mMonth, mDay);
@@ -143,6 +147,9 @@ public class OnLeave extends Fragment {
                                 // set day of month , month and year value in the edit text
                                 to_date.setText(month[monthOfYear] + " " + dayOfMonth + ", " +
                                         year);
+                                selected_day_to = dayOfMonth;
+                                selected_month_to = monthOfYear;
+                                selected_year_to = year;
 
                             }
                         }, mYear, mMonth, mDay);
@@ -153,15 +160,34 @@ public class OnLeave extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myRef = database.getReference("onLeave").child(user.getUid().toString());
-                myRef.child("From").setValue(from_date.getText().toString());
-                myRef.child("To").setValue(to_date.getText().toString());
-                myRef.child("Reason").setValue(editText_reason.getText().toString());
-                from_date.setText("");
-                to_date.setText("");
-                editText_reason.setText("");
-                Toast.makeText(getActivity(), "Your response has been recorded.",
-                        Toast.LENGTH_LONG).show();
+                if (selected_year_to>=selected_year_from){
+                    if (selected_month_to>=selected_month_from){
+                        if (selected_day_to>=selected_day_from){
+                            myRef = database.getReference("onLeave").child(user.getUid().toString());
+                            myRef.child("From").setValue(from_date.getText().toString());
+                            myRef.child("To").setValue(to_date.getText().toString());
+                            myRef.child("Reason").setValue(editText_reason.getText().toString());
+                            from_date.setText("");
+                            to_date.setText("");
+                            editText_reason.setText("");
+                            Toast.makeText(getActivity(), "Your response has been recorded.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getActivity(), "Please fill the details properly.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Please fill the details properly.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(getActivity(), "Please fill the details properly.",
+                            Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

@@ -1,0 +1,41 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ddd"
+    tools:context="com.messapp.iitmandi.messapp.AdminOnLeave">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/admin_on_leave_layout"
+        android:layout_margin="@dimen/activity_horizontal_margin">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="People On Leave!"
+        android:textColor="@color/primary_text"
+        android:id="@+id/on_leave_tv"
+        android:textStyle="bold"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_below="@+id/on_leave_tv"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/recycler_view">
+
+    </android.support.v7.widget.RecyclerView>
+    <ProgressBar
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@id/progressBar"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        />
+    </RelativeLayout>
+
+</FrameLayout>

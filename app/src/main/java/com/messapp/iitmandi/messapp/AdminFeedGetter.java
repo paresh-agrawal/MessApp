@@ -4,7 +4,7 @@ package com.messapp.iitmandi.messapp;
  * Created by root on 23/3/17.
  */
 
-public class AdminFeed {
+public class AdminFeedGetter {
 
     private String userEmail;
     private String itemName;
@@ -12,7 +12,7 @@ public class AdminFeed {
     private String rating;
     private String meal;
 
-    public AdminFeed(String userEmail, String meal, String itemName, String rating, String feedText){
+    public AdminFeedGetter(String userEmail, String meal, String itemName, String rating, String feedText){
         this.userEmail = userEmail;
         this.itemName = itemName;
         this.feedText = feedText;

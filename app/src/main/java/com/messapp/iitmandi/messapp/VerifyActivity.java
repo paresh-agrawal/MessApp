@@ -78,6 +78,9 @@ public class VerifyActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(VerifyActivity.this, "Verification Email sent", Toast.LENGTH_SHORT).show();
+                                                Uri uri = Uri.parse("https://students.iitmandi.ac.in/webmail");
+                                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                                startActivity(intent);
 
                                             }
                                         }
