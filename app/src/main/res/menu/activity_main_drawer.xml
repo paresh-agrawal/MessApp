@@ -12,10 +12,6 @@
             android:icon="@drawable/ic_mess_menu"
             android:title="Mess Menu" />
         <item
-            android:id="@+id/nav_on_leave"
-            android:icon="@drawable/ic_on_leave"
-            android:title="Going on leave!" />
-        <item
             android:checkable="false"
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_menu_share"

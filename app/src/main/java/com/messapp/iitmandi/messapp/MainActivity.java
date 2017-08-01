@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private Spinner spinner_item,spinner_time;
+    private Spinner spinner_item,spinner_time,spinner_mess;
     private String day;
     private Button day_selected,button_submit;
     private RatingBar ratingBar;
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity
 
         //spinner_day = (Spinner)findViewById(R.id.spinner_day);
         spinner_item = (Spinner)findViewById(R.id.spinner_item);
+        spinner_mess = (Spinner)findViewById(R.id.spinner_mess);
         spinner_time = (Spinner)findViewById(R.id.spinner_time);
         day_selected = (Button) findViewById(R.id.day_selected);
         ratingBar = (RatingBar)findViewById(R.id.ratingBar);
@@ -160,7 +161,9 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "Please enter some rating.",
                     Toast.LENGTH_LONG).show();
         }else {
-            myRef = database.getReference("feedback").child(date).child(user.getUid().toString()).child(spinner_time.getSelectedItem().toString()).child(spinner_item.getSelectedItem().toString());
+            myRef = database.getReference("feedback").child(date).child(spinner_mess.getSelectedItem().toString())
+                    .child(user.getUid().toString())
+                    .child(spinner_time.getSelectedItem().toString()).child(spinner_item.getSelectedItem().toString());
             myRef.child("Feed").setValue(editText_feedback.getText().toString());
             myRef.child("Rating").setValue(ratingBar.getRating());
             editText_feedback.setText("");
@@ -171,7 +174,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getTime() {
-        myRef = database.getReference("menu").child(dayOfTheWeek).child(spinner_time.getSelectedItem().toString());
+        myRef = database.getReference("menu").child(spinner_mess.getSelectedItem().toString()).child(dayOfTheWeek).child(spinner_time.getSelectedItem().toString());
         ar.clear();
         feedback_linear_layout.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -243,8 +246,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_feedback) {
             displayView(R.id.nav_feedback);
-        } else if (id == R.id.nav_on_leave) {
-            displayView(R.id.nav_on_leave);
         } else if (id == R.id.nav_mess_menu) {
             displayView(R.id.nav_mess_menu);
         } else if (id == R.id.nav_share) {
@@ -263,10 +264,6 @@ public class MainActivity extends AppCompatActivity
         String title = getString(R.string.app_name);
 
         switch (viewId) {
-            case R.id.nav_on_leave:
-                fragment = new OnLeave();
-                title = "Going on Leave!";
-                break;
             case R.id.nav_feedback:
                 fragment = null;
                 title = "Feedback";
@@ -316,7 +313,8 @@ public class MainActivity extends AppCompatActivity
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Mess App");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Download the IIT Mandi Mess App and give your valuable feedback https://play.google.com/store/apps/details?id=com.messapp.iitmandi.messapp");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                "Download the IIT Mandi Mess App and give your valuable feedback https://play.google.com/store/apps/details?id=com.messapp.iitmandi.messapp");
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 }

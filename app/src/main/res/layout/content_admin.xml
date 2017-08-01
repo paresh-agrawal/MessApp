@@ -29,11 +29,24 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp">
+            <Spinner
+                android:id="@+id/spinner_mess"
+                android:layout_width="wrap_content"
+                android:entries="@array/mess_string"
+                android:layout_height="50dp"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/divider"
+                android:layout_toRightOf="@+id/spinner_mess"
+                android:id="@+id/divider1"
+                android:layout_margin="5dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/divider1"
                 android:id="@+id/date_tv"
-                android:textSize="25dp"
+                android:textSize="13dp"
                 android:layout_centerVertical="true"
                 android:textColor="@color/primary_text"/>
             <ImageButton

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,6 +43,7 @@ public class AdminActivity extends AppCompatActivity
     private DatabaseReference myRef, emailRef;
     private ImageButton date_select;
     private TextView date_display;
+    private Spinner spinner_mess;
     private DatePickerDialog datePickerDialog;
     static boolean active = false;
     private String[] month = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -77,6 +79,7 @@ public class AdminActivity extends AppCompatActivity
 
         date_select = (ImageButton)findViewById(R.id.choose_date);
         date_display = (TextView)findViewById(R.id.date_tv);
+        spinner_mess = (Spinner)findViewById(R.id.spinner_mess);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         database = FirebaseDatabase.getInstance();
@@ -86,7 +89,7 @@ public class AdminActivity extends AppCompatActivity
         day_selected = (Button)findViewById(R.id.day_selected);
 
         Calendar c = Calendar.getInstance();
-        date_display.setText(month[c.get(Calendar.MONTH)] + " " + c.get(Calendar.DAY_OF_MONTH) + ", "
+        date_display.setText(c.get(Calendar.DAY_OF_MONTH) + " " + month[c.get(Calendar.MONTH)] + " "
                                 + c.get(Calendar.YEAR));
 
         date_select.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +109,7 @@ public class AdminActivity extends AppCompatActivity
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
 
-                                date_display.setText(month[monthOfYear] + " " + dayOfMonth + ", " +
+                                date_display.setText(dayOfMonth + " " + month[monthOfYear] + " " +
                                         year);
 
                             }
@@ -134,7 +137,7 @@ public class AdminActivity extends AppCompatActivity
         adapterSearch = new AdminFeedItemAdapter(this, feedList);
         recyclerView.setAdapter(adapterSearch);
 
-        myRef = database.getReference("feedback").child(date_display.getText().toString());
+        myRef = database.getReference("feedback").child(date_display.getText().toString()).child(spinner_mess.getSelectedItem().toString());
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -186,10 +189,12 @@ public class AdminActivity extends AppCompatActivity
 
         if (id == R.id.nav_feedback) {
             displayView(R.id.nav_feedback);
-        } else if (id == R.id.nav_on_leave) {
-            displayView(R.id.nav_on_leave);
         } else if (id == R.id.nav_mess_menu) {
             displayView(R.id.nav_mess_menu);
+        } else if (id == R.id.nav_share) {
+            shareIt();
+        } else if (id == R.id.nav_credits){
+            displayView(R.id.nav_credits);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -202,17 +207,17 @@ public class AdminActivity extends AppCompatActivity
         String title = getString(R.string.app_name);
 
         switch (viewId) {
-            case R.id.nav_on_leave:
-                fragment = new AdminOnLeave();
-                title = "Going on Leave!";
-                break;
             case R.id.nav_feedback:
                 fragment = null;
                 title = "Feedback";
                 break;
             case R.id.nav_mess_menu:
-                fragment = new AdminMessMenu();
+                fragment = new MessMenu();
                 title = "Mess Menu";
+                break;
+            case R.id.nav_credits:
+                fragment = new Credits();
+                title = "Credits";
                 break;
         }
 
@@ -269,5 +274,14 @@ public class AdminActivity extends AppCompatActivity
     public void onStop() {
         super.onStop();
         active = false;
+    }
+    private void shareIt() {
+//sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Mess App");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                "Download the IIT Mandi Mess App and give your valuable feedback https://play.google.com/store/apps/details?id=com.messapp.iitmandi.messapp");
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 }

@@ -52,10 +52,22 @@
                 android:weightSum="100"
                 android:orientation="horizontal">
                 <Spinner
+                    android:id="@+id/spinner_mess"
+                    android:layout_width="wrap_content"
+                    android:popupElevation="4dp"
+                    android:layout_weight="35"
+                    android:entries="@array/mess_string"
+                    android:layout_height="50dp"/>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/divider"
+                    android:layout_margin="5dp"/>
+                <Spinner
                     android:id="@+id/spinner_time"
                     android:layout_width="wrap_content"
                     android:popupElevation="4dp"
-                    android:layout_weight="90"
+                    android:layout_weight="55"
                     android:layout_height="50dp"/>
                 <View
                     android:layout_width="1dp"

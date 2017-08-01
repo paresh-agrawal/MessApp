@@ -75,6 +75,7 @@ public class MessMenu extends Fragment {
         final ProgressBar progressBar = (ProgressBar)mess_menu.findViewById(R.id.progressBar);
         final Spinner spinner_day = (Spinner)mess_menu.findViewById(R.id.spinner_day);
         final Spinner spinner_time = (Spinner)mess_menu.findViewById(R.id.spinner_time);
+        final Spinner spinner_mess = (Spinner)mess_menu.findViewById(R.id.spinner_mess);
         final Button btn_go = (Button)mess_menu.findViewById(R.id.btn_go);
 
         auth = FirebaseAuth.getInstance();
@@ -124,7 +125,8 @@ public class MessMenu extends Fragment {
                 userList.clear();
                 adapterSearch.notifyDataSetChanged();
                 if (spinner_day.getSelectedItem().toString().equals("Today")){
-                    myRef = database.getReference("menu").child(dayOfTheWeek).child(spinner_time.getSelectedItem().toString());
+                    myRef = database.getReference("menu").child(spinner_mess.getSelectedItem().toString())
+                            .child(dayOfTheWeek).child(spinner_time.getSelectedItem().toString());
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,7 +145,8 @@ public class MessMenu extends Fragment {
                         }
                     });
                 } else{
-                    myRef = database.getReference("menu").child(spinner_day.getSelectedItem().toString()).child(spinner_time.getSelectedItem().toString());
+                    myRef = database.getReference("menu").child(spinner_mess.getSelectedItem().toString())
+                            .child(spinner_day.getSelectedItem().toString()).child(spinner_time.getSelectedItem().toString());
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
