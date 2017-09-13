@@ -178,8 +178,6 @@ public class AdminActivity extends AppCompatActivity
 
             }
         });
-
-
     }
 
     @Override

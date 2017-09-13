@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -151,6 +152,92 @@ public class MainActivity extends AppCompatActivity
                 SubmitFeed();
             }
         });
+
+        //notifications();
+
+    }
+
+    private void notifications() {
+        long time = System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,07);
+        calendar.set(Calendar.MINUTE,20);
+        if (time < calendar.getTimeInMillis()) {
+            Intent intent = new Intent(getApplicationContext(), NotificationRecieverBD1.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmManager.INTERVAL_DAY, pendingIntent);
+        }
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(Calendar.HOUR_OF_DAY, 07);
+        calendar1.set(Calendar.MINUTE, 20);
+        if (time < calendar1.getTimeInMillis()) {
+            Intent intent1 = new Intent(getApplicationContext(), NotificationRecieverBD2.class);
+            PendingIntent pendingIntent1 = PendingIntent.getBroadcast(getApplicationContext(), 90, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager1 = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager1.setRepeating(AlarmManager.RTC_WAKEUP, calendar1.getTimeInMillis(), alarmManager1.INTERVAL_DAY, pendingIntent1);
+        }
+
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(Calendar.HOUR_OF_DAY,11);
+        calendar2.set(Calendar.MINUTE,50);
+        if (time < calendar2.getTimeInMillis()) {
+            Intent intent2 = new Intent(getApplicationContext(), NotificationRecieverLD1.class);
+            PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getApplicationContext(), 80, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager2 = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager2.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), alarmManager2.INTERVAL_DAY, pendingIntent2);
+        }
+
+        Calendar calendar3 = Calendar.getInstance();
+        calendar3.set(Calendar.HOUR_OF_DAY,11);
+        calendar3.set(Calendar.MINUTE,50);
+        if (time < calendar3.getTimeInMillis()) {
+            Intent intent3 = new Intent(getApplicationContext(), NotificationRecieverLD2.class);
+            PendingIntent pendingIntent3 = PendingIntent.getBroadcast(getApplicationContext(), 70, intent3, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager3 = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager3.setRepeating(AlarmManager.RTC_WAKEUP, calendar3.getTimeInMillis(), alarmManager3.INTERVAL_DAY, pendingIntent3);
+        }
+
+        Calendar calendar4 = Calendar.getInstance();
+        calendar4.set(Calendar.HOUR_OF_DAY,16);
+        calendar4.set(Calendar.MINUTE,50);
+        if (time < calendar4.getTimeInMillis()) {
+            Intent intent4 = new Intent(getApplicationContext(), NotificationRecieverSD1.class);
+            PendingIntent pendingIntent4 = PendingIntent.getBroadcast(getApplicationContext(), 60, intent4, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager4 = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager4.setRepeating(AlarmManager.RTC_WAKEUP, calendar4.getTimeInMillis(), alarmManager4.INTERVAL_DAY, pendingIntent4);
+        }
+
+        Calendar calendar5 = Calendar.getInstance();
+        calendar5.set(Calendar.HOUR_OF_DAY,16);
+        calendar5.set(Calendar.MINUTE,50);
+        if (time < calendar5.getTimeInMillis()) {
+            Intent intent5 = new Intent(getApplicationContext(), NotificationRecieverSD2.class);
+            PendingIntent pendingIntent5 = PendingIntent.getBroadcast(getApplicationContext(), 50, intent5, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager5 = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager5.setRepeating(AlarmManager.RTC_WAKEUP, calendar5.getTimeInMillis(), alarmManager5.INTERVAL_DAY, pendingIntent5);
+        }
+
+        Calendar calendar6 = Calendar.getInstance();
+        calendar6.set(Calendar.HOUR_OF_DAY,19);
+        calendar6.set(Calendar.MINUTE,20);
+        if (time < calendar6.getTimeInMillis()) {
+            Intent intent6 = new Intent(getApplicationContext(), NotificationRecieverDD1.class);
+            PendingIntent pendingIntent6 = PendingIntent.getBroadcast(getApplicationContext(), 40, intent6, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager6 = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager6.setRepeating(AlarmManager.RTC_WAKEUP, calendar6.getTimeInMillis(), alarmManager6.INTERVAL_DAY, pendingIntent6);
+        }
+
+        Calendar calendar7 = Calendar.getInstance();
+        calendar7.set(Calendar.HOUR_OF_DAY,19);
+        calendar7.set(Calendar.MINUTE,20);
+        if (time < calendar7.getTimeInMillis()) {
+            Intent intent7 = new Intent(getApplicationContext(), NotificationRecieverDD2.class);
+            PendingIntent pendingIntent7 = PendingIntent.getBroadcast(getApplicationContext(), 30, intent7, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager7 = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager7.setRepeating(AlarmManager.RTC_WAKEUP, calendar7.getTimeInMillis(), alarmManager7.INTERVAL_DAY, pendingIntent7);
+        }
     }
 
     private void SubmitFeed() {
@@ -190,9 +277,10 @@ public class MainActivity extends AppCompatActivity
 
                     ar.add(item);
                     spinner_item.setAdapter(adapter);
-                    Toast.makeText(MainActivity.this, "Enter your feedback.",
-                            Toast.LENGTH_SHORT).show();
+
                 }
+                Toast.makeText(MainActivity.this, "Enter your feedback.",
+                        Toast.LENGTH_SHORT).show();
             }
 
             @Override
